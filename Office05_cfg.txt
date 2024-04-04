@@ -1,0 +1,81 @@
+set property first-time-wizard off
+set time-zone GMT+03:00(Moscow)
+
+set hostname Office05
+
+add internet-connection name Internet1 interface WAN type static ipv4-address 10.10.0.146 mask-length 30 default-gw 10.10.0.145
+#add internet-connection name Internet2 interface DMZ type dhcp conn-test-timeout 0
+
+delete interface LAN1_Switch
+
+set interface LAN1 unassigned
+set interface LAN1 state on
+set interface LAN2 unassigned
+set interface LAN2 state on
+set interface LAN3 unassigned
+set interface LAN3 state on
+set interface LAN4 unassigned
+set interface LAN4 state on
+set interface LAN5 unassigned
+set interface LAN5 state on
+set interface LAN6 unassigned
+set interface LAN6 state on
+set interface LAN7 unassigned
+set interface LAN7 state on
+set interface LAN8 unassigned
+set interface LAN8 state on
+
+add interface LAN1 vlan 10 # VLAN 10
+set interface LAN1:10 ipv4-address 10.10.1.65 mask-length 10.10.1.78
+add interface LAN1 vlan 20 # VLAN 20
+set interface LAN1:20 ipv4-address 10.10.2.65 mask-length 10.10.2.78
+add interface LAN1 vlan 30 # VLAN 30
+set interface LAN1:30 ipv4-address 10.10.3.65 mask-length 10.10.3.78
+add interface LAN1 vlan 40 # VLAN 40
+set interface LAN1:40 ipv4-address 10.10.4.65 mask-length 10.10.4.78
+add interface LAN1 vlan 50 # VLAN 50
+set interface LAN1:50 ipv4-address 10.10.5.33 mask-length 10.10.5.38
+add interface LAN1 vlan 60 # VLAN 60
+set interface LAN1:60 ipv4-address 10.10.6.33 mask-length 10.10.6.38
+add interface LAN1 vlan 70 # VLAN 70
+set interface LAN1:70 ipv4-address 10.10.7.33 mask-length 10.10.7.38
+add interface LAN1 vlan 80 # VLAN 80
+set interface LAN1:80 ipv4-address 10.10.8.17 mask-length 10.10.8.18
+add interface LAN1 vlan 90 # VLAN 90
+set interface LAN1:90 ipv4-address 10.10.9.129 mask-length 10.10.9.158
+add interface LAN1 vlan 100 # VLAN 100
+set interface LAN1:100 ipv4-address 10.10.10.33 mask-length 10.10.10.38
+
+set ntp active on
+set ntp server primary 1.1.1.1
+set ntp server secondary 2.2.2.2
+
+dynamic_objects -n ggr_LocalNet
+dynamic_objects -n ggr_DMZNet
+dynamic_objects -n ggr_LocalDHCP
+
+dynamic_objects -o ggr_LocalNet -r 127.0.0.1 127.0.0.1 -a
+dynamic_objects -o ggr_LocalNet -r 10.10.1.65 28 -a # VLAN 10
+dynamic_objects -o ggr_LocalNet -r 10.10.2.65 28 -a # VLAN 20
+dynamic_objects -o ggr_LocalNet -r 10.10.3.65 28 -a # VLAN 30
+dynamic_objects -o ggr_LocalNet -r 10.10.4.65 28 -a # VLAN 40
+dynamic_objects -o ggr_LocalNet -r 10.10.5.33 29 -a # VLAN 50
+
+dynamic_objects -o ggr_DMZNet -r 10.10.6.33 29 -a # VLAN 60
+dynamic_objects -o ggr_DMZNet -r 10.10.7.33 29 -a # VLAN 70
+dynamic_objects -o ggr_DMZNet -r 10.10.8.17 30 -a # VLAN 80
+dynamic_objects -o ggr_DMZNet -r 10.10.9.129 27 -a # VLAN 90
+dynamic_objects -o ggr_DMZNet -r 10.10.10.33 29 -a # VLAN 100
+
+dynamic_objects -o ggr_LocalDHCP -r 127.0.0.1 127.0.0.1 -a
+
+set user admin type admin password Chkp!234
+set admin-access interfaces WAN access allow
+set admin-access allowed-ipv4-addresses any
+set sic_init password Chkp!234
+
+fetch license usercenter
+show license
+
+delete internet-connection Internet2
+
